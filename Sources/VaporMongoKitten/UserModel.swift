@@ -22,12 +22,12 @@ extension UserModel {
     
     /// Hashes the password
     public static func hash(password: String) throws -> String {
-        let derivedKey = try BCrypt.hashPassword(password)
+        let derivedKey = BCrypt.hash(password: password)
         
         return derivedKey
     }
     
     public func validate(against inputPassword: String) throws -> Bool {
-        return try BCrypt.verifyPassword(inputPassword, matchesHash: password)
+        return try BCrypt.verify(password: inputPassword, matchesHash: password)
     }
 }

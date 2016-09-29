@@ -6,10 +6,8 @@
 //
 //
 
-import class HTTP.Response
-import class HTTP.Request
-import protocol HTTP.Responder
-import protocol Vapor.Middleware
+import HTTP
+import Vapor
 
 /// A middleware that will execute a closure when a request is handled without a proper permissions
 /// check

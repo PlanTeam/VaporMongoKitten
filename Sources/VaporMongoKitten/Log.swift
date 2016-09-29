@@ -1,3 +1,3 @@
 import LogKitten
 
-let log = Logger()
+public let log = Logger()

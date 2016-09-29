@@ -16,7 +16,7 @@ public protocol Model : class, CustomStringConvertible {
     static var collection: MongoKitten.Collection { get }
     static var modelName: String { get }
     
-    var deletable: Bool { get }
+    func isDeletable() throws -> Bool
     
     func deleteChildren() throws
     func delete() throws
@@ -31,6 +31,10 @@ public protocol Model : class, CustomStringConvertible {
 }
 
 extension Model {
+    public func isDeletable() throws -> Bool {
+        return true
+    }
+    
     public init(data: Document, validating: Bool) throws {
         try self.init(data: data)
     }
@@ -49,7 +53,7 @@ extension Model {
         }
     }
     
-    var id: ObjectId {
+    public var id: ObjectId {
         get {
             guard case Value.objectId(let myId) = self["_id"] else {
                 let myId = ObjectId()
@@ -64,7 +68,7 @@ extension Model {
 }
 
 extension Model {
-    static func transform(cursor: Cursor<Document>) -> Cursor<Self> {
+    public static func transform(cursor: Cursor<Document>) -> Cursor<Self> {
         return Cursor(base: cursor) { input in
             return try? Self(data: input)
         }
@@ -118,6 +122,7 @@ extension Model {
         if unset && unsetQuery.count > 0 {
             totalQuery["$unset"] = ~unsetQuery
         }
+        
         try Self.collection.update(matching: "_id" == self["_id"], to: totalQuery)
     }
     
@@ -182,7 +187,7 @@ extension Model {
     }
     
     public func delete() throws {
-        guard deletable else {
+        guard try isDeletable() else {
             throw ORMError.undeletableObject(id: self["_id"].objectIdValue)
         }
         
@@ -196,7 +201,11 @@ extension Model {
 extension Array where Element : Model {
     public var deletable: Bool {
         for model in self {
-            guard model.deletable else {
+            do {
+                guard try model.isDeletable() else {
+                    return false
+                }
+            } catch {
                 return false
             }
         }

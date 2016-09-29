@@ -6,7 +6,6 @@ import Cookies
 import HTTP
 import BCrypt
 
-let server = try!  MongoKitten.Server("")
 let server = try! MongoKitten.Server(at: "127.0.0.1")
 let db = server["mydatabase"]
 let log = Logger()
@@ -155,16 +154,14 @@ public final class User : UserModel {
     }
 }
 
-let drop = Droplet()
-
 
 // For security reasons, we don't want non-permission checked code. I'd rather crash than have a security leak
-drop.middleware.append(FailsafeMiddleware() { request, response in
-    fatalError("Request wasn't permission-checked: \(request), response: \(response)")
-    })
-
-let authenticator = Authenticator()
-drop.middleware.append(authenticator)
+//drop.middleware.append(FailsafeMiddleware() { request, response in
+//    fatalError("Request wasn't permission-checked: \(request), response: \(response)")
+//    })
+//
+//let authenticator = Authenticator()
+//drop.middleware.append(authenticator)
 
 
 drop.post("register") { request in

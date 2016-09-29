@@ -6,11 +6,9 @@
 //
 //
 
-import class HTTP.Response
+import HTTP
+import Vapor
 import struct BSON.Document
-import protocol HTTP.ResponseRepresentable
-import enum HTTP.Status
-
 
 extension Document : ResponseRepresentable {
     public func makeResponse() throws -> Response {
@@ -24,7 +22,7 @@ extension HTTP.Response {
     }
 }
 
-enum UnwrapError : Error {
+public enum UnwrapError : Error {
     case noValue
 }
 
@@ -36,3 +34,16 @@ public postfix func *<T>(_ val: T?) throws -> T {
     }
 }
 
+extension Request {
+    public var document: Document? {
+        guard let bytes = self.body.bytes else {
+            return nil
+        }
+        
+        guard let json = try? String(bytes: bytes) else {
+            return nil
+        }
+        
+        return try? Document(extendedJSON: json)
+    }
+}

@@ -1,4 +1,4 @@
-import protocol Vapor.Middleware
+import Vapor
 
 /// The `Permission` protocol is to be implemented on enums.
 /// 
