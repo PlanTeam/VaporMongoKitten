@@ -163,10 +163,6 @@ public func extract(from request: Request, requiredFields: [String : KeyType] = 
     
     let document = try Document(extendedJSON: json)
     
-    
-    request.data
-    
-    
     try validate(document: document, requiredFields: requiredFields, optionalFields: optionalFields)
     
     return document
