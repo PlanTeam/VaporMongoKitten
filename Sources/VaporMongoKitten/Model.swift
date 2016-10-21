@@ -74,7 +74,7 @@ extension Model {
         }
     }
     
-    public static func find(matching query: MongoKitten.QueryProtocol? = nil, sortedBy sort: Document? = nil, projecting projection: BSON.Document? = nil) throws -> Cursor<Self> {
+    public static func find(matching query: MongoKitten.QueryProtocol? = nil, sortedBy sort: Document? = nil, projecting projection: Projection? = nil) throws -> Cursor<Self> {
         
         let documentCursor: Cursor<Document>
         
@@ -87,7 +87,7 @@ extension Model {
         return Self.transform(cursor: documentCursor)
     }
     
-    public static func findOne(matching query: MongoKitten.QueryProtocol? = nil, sortedBy sort: Document? = nil, projecting projection: BSON.Document? = nil) throws -> Self? {
+    public static func findOne(matching query: MongoKitten.QueryProtocol? = nil, sortedBy sort: Document? = nil, projecting projection: Projection? = nil) throws -> Self? {
         return try self.find(matching: query, sortedBy: sort, projecting: projection).makeIterator().next()
     }
     
@@ -133,7 +133,7 @@ extension Model {
     /// Change the fields in self with the fields from the database in projection
     ///
     /// - parameter combine: Defaults to true. Combines this projection with the previous.
-    public func reproject(_ projection: BSON.Document, combine: Bool = true) throws {
+    public func reproject(_ projection: Projection, combine: Bool = true) throws {
         guard let data = try Self.collection.findOne(matching: "_id" == self["_id"], projecting: projection) else {
             throw ORMError.unfindableObject(collection: Self.collection, id: self["_id"].objectIdValue)
         }
