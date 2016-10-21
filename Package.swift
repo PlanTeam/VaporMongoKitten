@@ -10,7 +10,7 @@ let package = Package(
         ],
     dependencies: [
         .Package(url: "https://github.com/vapor/vapor.git", majorVersion: 1),
-        .Package(url: "https://github.com/OpenKitten/MongoKitten.git", majorVersion: 2, minor: 0),
+        .Package(url: "https://github.com/OpenKitten/MongoKitten.git", majorVersion: 2),
         .Package(url: "https://github.com/OpenKitten/LogKitten.git", majorVersion: 0, minor: 2),
     ]
 )
